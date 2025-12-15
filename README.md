@@ -34,3 +34,17 @@ Sistem wawancara kerja *hybrid* yang menggabungkan konferensi video real-time de
 ## LANGKAH - LANGKAH
 
 ### HALAMAN HRD
+1. Buka halaman web milik HRD
+   * https://chisa06-intrv-hrd.hf.space
+2. Konfigurasi parameter
+   * Pilih Bahasa Video (Indonesia/Inggris).
+   * Masukkan Jawaban Ideal (Kunci jawaban untuk referensi AI).
+   * Masukkan Keywords Wajib (Istilah teknis yang harus muncul).
+3. Buat sesi live
+   * Klik "Generate Kode".
+   * Bagikan kode tersebut ke kandidat.
+   * Tombol Record di aplikasi perekam layar Anda (OBS/Game Bar) secara manual, karena Jitsi Embed tidak merekam otomatis.
+4. Analisis video
+   * Upload file video hasil rekaman (.mp4, .webm, .wav).
+   * Klik "Mulai Analisis AI".
+   * Unduh laporan PDF setelah analisis selesai.
