@@ -48,3 +48,13 @@ Sistem wawancara kerja *hybrid* yang menggabungkan konferensi video real-time de
    * Upload file video hasil rekaman (.mp4, .webm, .wav).
    * Klik "Mulai Analisis AI".
    * Unduh laporan PDF setelah analisis selesai.
+
+---
+
+### HALAMAN KANDIDAT
+1. Buka halaman web milik kandidat
+   * https://chisa06-intrvu.hf.space
+2. Login ke room meet
+   * Masukkan Nama Lengkap.
+   * Masukkan Kode Meeting yang diberikan HRD.
+   * Klik "Masuk ke Room 🚀".
