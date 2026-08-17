@@ -11,6 +11,8 @@ from sentence_transformers import SentenceTransformer, util
 from transformers import pipeline
 import plotly.express as px
 from fpdf import FPDF
+# Ganti AutoTokenizer menjadi MarianTokenizer
+from transformers import MarianTokenizer, AutoModelForSeq2SeqLM
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="HRD Dashboard - AI Interview", layout="wide")
@@ -19,17 +21,30 @@ st.set_page_config(page_title="HRD Dashboard - AI Interview", layout="wide")
 if 'meeting_code' not in st.session_state:
     st.session_state['meeting_code'] = None
 
+class CustomTranslator:
+    def __init__(self, model_name="Helsinki-NLP/opus-mt-en-id"):
+        # Gunakan MarianTokenizer secara spesifik alih-alih AutoTokenizer
+        self.tokenizer = MarianTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+        
+    def __call__(self, text, **kwargs):
+        # Tambahkan max_length dan max_new_tokens agar teks panjang tidak gagal diproses
+        inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+        outputs = self.model.generate(**inputs, max_new_tokens=512)
+        result = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return [{"translation_text": result}] 
+
 # --- CACHE MODELS ---
 @st.cache_resource
 def load_models():
     print("Loading AI Models...")
     stt_model = whisper.load_model("base")
     nlp_model = SentenceTransformer('all-MiniLM-L6-v2')
-    translator = pipeline("translation", model="Helsinki-NLP/opus-mt-en-id")
+    translator = CustomTranslator()
     print("All Models Loaded!")
     return stt_model, nlp_model, translator
 
-stt_model, nlp_model, translator = load_models()
+stt_model, nlp_model, translator = load_models()  
 
 # --- HELPER FUNCTIONS ---
 
@@ -109,9 +124,11 @@ def translate_long_text(text, translator_pipeline):
     for chunk in chunks:
         if chunk.strip():
             try:
-                res = translator_pipeline(chunk, max_length=512, truncation=True)
+                # Memanggil translator dengan argument yang sesuai dengan class CustomTranslator
+                res = translator_pipeline(chunk)
                 translated_chunks.append(res[0]['translation_text'])
-            except:
+            except Exception as e:
+                # Jika error, biarkan dalam bahasa asli agar teks tidak hilang
                 translated_chunks.append(chunk)
     return " ".join(translated_chunks)
 
